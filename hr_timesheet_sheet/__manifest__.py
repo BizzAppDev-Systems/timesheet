@@ -6,7 +6,7 @@
 
 {
     "name": "HR Timesheet Sheet",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Human Resources",
     "sequence": 80,
     "summary": "Timesheet Sheets, Activities",
@@ -15,7 +15,12 @@
     "website": "https://github.com/OCA/timesheet",
     "installable": True,
     "auto_install": False,
-    "depends": ["hr_timesheet", "sale_timesheet", "web_widget_x2many_2d_matrix"],
+    "depends": [
+        "hr_timesheet",
+        "sale_timesheet",
+    ],
+    # TODO: Add the web_widget_x2many_2d_matrix module in the dependency.
+    # Currently it is not available in version 16.0
     "data": [
         "data/hr_timesheet_sheet_data.xml",
         "security/ir.model.access.csv",
