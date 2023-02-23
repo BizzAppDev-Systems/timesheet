@@ -155,8 +155,14 @@ class Sheet(models.Model):
     add_line_task_id = fields.Many2one(
         comodel_name="project.task",
         string="Select Task",
+        domain="[('id', 'in', allowed_task_ids)]",
         help="If selected, the associated task is added "
         "to the timesheet sheet when clicked the button.",
+    )
+
+    # T5819: add new field for the domain
+    allowed_task_ids = fields.Many2many(
+        "project.task", compute="_compute_allowed_task_ids"
     )
     total_time = fields.Float(compute="_compute_total_time", store=True)
     can_review = fields.Boolean(
@@ -443,21 +449,20 @@ class Sheet(models.Model):
     def _onchange_timesheets(self):
         self._compute_line_ids()
 
-    @api.onchange("add_line_project_id")
-    def onchange_add_project_id(self):
-        """Load the project to the timesheet sheet"""
-        if self.add_line_project_id:
-            return {
-                "domain": {
-                    "add_line_task_id": [
+    def _compute_allowed_task_ids(self):
+        for timesheet_sheet in self:
+            if timesheet_sheet.add_line_project_id:
+                task_ids = self.env["project.task"].search(
+                    [
                         ("project_id", "=", self.add_line_project_id.id),
                         ("company_id", "=", self.company_id.id),
                         ("id", "not in", self.timesheet_ids.mapped("task_id").ids),
                     ]
-                }
-            }
-        else:
-            return {"domain": {"add_line_task_id": [("id", "=", False)]}}
+                )
+                allowed_task_ids = [(4, task_id.id) for task_id in task_ids]
+                timesheet_sheet.update({"allowed_task_ids": allowed_task_ids})
+            else:
+                timesheet_sheet.allowed_task_ids = False
 
     @api.model
     def _check_employee_user_link(self, vals):
@@ -480,9 +485,10 @@ class Sheet(models.Model):
         return super().copy(default=default)
 
     @api.model_create_multi
-    def create(self, vals):
-        self._check_employee_user_link(vals)
-        res = super().create(vals)
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._check_employee_user_link(vals)
+        res = super().create(vals_list)
         res.write({"state": "draft"})
         return res
 

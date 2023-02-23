@@ -57,10 +57,11 @@ class AccountAnalyticLine(models.Model):
                 )
 
     @api.model_create_multi
-    def create(self, values):
-        if not self.env.context.get("sheet_create") and "sheet_id" in values:
-            del values["sheet_id"]
-        res = super().create(values)
+    def create(self, vals_list):
+        for values in vals_list:
+            if not self.env.context.get("sheet_create") and "sheet_id" in values:
+                del values["sheet_id"]
+        res = super().create(vals_list)
         res._compute_sheet()
         return res
 

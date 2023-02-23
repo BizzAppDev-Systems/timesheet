@@ -8,7 +8,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import Form, TransactionCase
 
 from ..models.hr_timesheet_sheet import empty_name
@@ -242,7 +242,6 @@ class TestHrTimesheetSheet(TransactionCase):
         self.assertEqual(len(sheet.timesheet_ids), 0)
         self.assertEqual(len(sheet.line_ids), 0)
         self.assertTrue(sheet.employee_id)
-
         with Form(sheet.with_user(self.user)) as sheet_form:
             sheet_form.add_line_project_id = self.project_1
         sheet.button_add_line()
@@ -952,7 +951,7 @@ class TestHrTimesheetSheet(TransactionCase):
         analytic_account = sheet.timesheet_ids.account_id
         self.assertEqual(analytic_account.company_id, self.company)
 
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             analytic_account.company_id = self.company_2
 
     def test_16(self):
@@ -981,17 +980,15 @@ class TestHrTimesheetSheet(TransactionCase):
                 "department_id": department.id,
             }
         )
-        sheet_form = Form(self.sheet_model.with_user(self.user))
-        sheet_form.employee_id = new_employee
-        sheet_form.department_id = self.department_model
-        sheet_no_department = sheet_form.save()
-        self.assertFalse(sheet_no_department.department_id)
-        sheet_no_department._onchange_employee_id()
-        self.assertTrue(sheet_no_department.department_id)
-        self.assertEqual(sheet_no_department.department_id, department)
-        self.assertTrue(sheet_no_department.company_id)
+        sheet_id = self.sheet_model.with_user(self.user).create(
+            {"employee_id": new_employee.id, "department_id": False}
+        )
+        self.assertFalse(sheet_id.department_id)
+        sheet_id._onchange_employee_id()
+        self.assertTrue(sheet_id.department_id)
+        self.assertEqual(sheet_id.department_id, department)
+        self.assertTrue(sheet_id.company_id)
 
-        sheet_no_department.unlink()
         sheet_form = Form(self.sheet_model.with_user(self.user))
         sheet_form.employee_id = self.employee_model
         with self.assertRaises(AssertionError):
@@ -1029,9 +1026,8 @@ class TestHrTimesheetSheet(TransactionCase):
     def test_workflow(self):
         sheet = Form(self.sheet_model.with_user(self.user)).save()
 
-        self.sheet_model.with_user(self.user).fields_view_get(view_type="form")
-        self.sheet_model.with_user(self.user).fields_view_get(view_type="tree")
-
+        self.sheet_model.with_user(self.user).get_view(view_type="form")
+        self.sheet_model.with_user(self.user).get_view(view_type="tree")
         with self.assertRaises(UserError):
             sheet.with_user(self.user_3).action_timesheet_refuse()
         with self.assertRaises(UserError):
