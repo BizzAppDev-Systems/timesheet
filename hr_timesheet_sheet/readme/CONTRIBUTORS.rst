@@ -7,3 +7,4 @@
 
 * Dennis Sluijk <d.sluijk@onestein.nl>
 * Sunanda Chhatbar <sunanda.chhatbar@initos.com>
+* Ruchir Shukla <ruchir@bizzappdev.com>
