@@ -117,4 +117,4 @@ class HrTimesheetSheet(models.Model):
                     "Please delete the related PO first.",
                 ),
             )
-        super().action_timesheet_draft()
+        return super().action_timesheet_draft()
