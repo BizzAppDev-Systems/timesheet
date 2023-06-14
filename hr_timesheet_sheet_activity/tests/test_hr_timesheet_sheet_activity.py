@@ -223,11 +223,7 @@ class TestHrTimesheetSheetActivity(common.TransactionCase):
 
         sheet = (
             self.HrTimesheetSheet.with_user(user_1)
-            .with_context(
-                {
-                    "hr_timesheet_sheet_activity_today": date(2020, 2, 7),
-                }
-            )
+            .with_context(hr_timesheet_sheet_activity_today=date(2020, 2, 7))
             .create(
                 {
                     "employee_id": employee.id,
@@ -313,11 +309,7 @@ class TestHrTimesheetSheetActivity(common.TransactionCase):
 
         sheet = (
             self.HrTimesheetSheet.with_user(user_1)
-            .with_context(
-                {
-                    "hr_timesheet_sheet_activity_today": date(2020, 2, 7),
-                }
-            )
+            .with_context(hr_timesheet_sheet_activity_today=date(2020, 2, 7))
             .create(
                 {
                     "employee_id": employee.id,
@@ -403,11 +395,7 @@ class TestHrTimesheetSheetActivity(common.TransactionCase):
 
         sheet = (
             self.HrTimesheetSheet.with_user(user_1)
-            .with_context(
-                {
-                    "hr_timesheet_sheet_activity_today": date(2020, 2, 7),
-                }
-            )
+            .with_context(hr_timesheet_sheet_activity_today=date(2020, 2, 7))
             .create(
                 {
                     "employee_id": employee.id,
@@ -493,11 +481,7 @@ class TestHrTimesheetSheetActivity(common.TransactionCase):
 
         sheet = (
             self.HrTimesheetSheet.with_user(user_1)
-            .with_context(
-                {
-                    "hr_timesheet_sheet_activity_today": date(2020, 2, 1),
-                }
-            )
+            .with_context(hr_timesheet_sheet_activity_today=date(2020, 2, 1))
             .create(
                 {
                     "employee_id": employee.id,
