@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import datetime
-
+import logging
 from odoo.exceptions import ValidationError
 from odoo.tests import common
 
@@ -54,7 +54,7 @@ class TestHrTimesheetTimeRestriction(common.TransactionCase):
                 }
             )
         except ValidationError:
-            pass
+            logging.exception("An error occured: ", ValidationError)
         self.assertFalse(line, "Timesheet should not be created")
 
     def test_project_restriction_days_by_config(self):
@@ -71,7 +71,7 @@ class TestHrTimesheetTimeRestriction(common.TransactionCase):
                 }
             )
         except ValidationError:
-            pass
+            logging.exception("An error occured: ", ValidationError)
         self.assertFalse(line, "Timesheet should not be created")
         # check that we cannot create new timesheet with date before
         # that current date - 1
@@ -87,7 +87,7 @@ class TestHrTimesheetTimeRestriction(common.TransactionCase):
                 }
             )
         except ValidationError:
-            pass
+            logging.exception("An error occured: ", ValidationError)
         self.assertFalse(line, "Timesheet should not be created")
 
     def test_project_restriction_days_ignore_config(self):
@@ -108,7 +108,7 @@ class TestHrTimesheetTimeRestriction(common.TransactionCase):
                 }
             )
         except ValidationError:
-            pass
+            logging.exception("An error occured: ", ValidationError)
         self.assertFalse(line, "Timesheet should not be created")
 
     def test_project_restriction_days_ignore_for_timesheet_time_manager(self):

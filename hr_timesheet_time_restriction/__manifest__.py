@@ -5,7 +5,7 @@
 
 {
     "name": "HR Timesheet Sheet Restriction",
-    "version": "14.0.1.0.1",
+    "version": "15.0.1.0.0",
     "category": "Human Resources",
     "website": "https://github.com/OCA/timesheet",
     "author": "Cetmix, Odoo Community Association (OCA)",

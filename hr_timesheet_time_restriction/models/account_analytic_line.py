@@ -51,10 +51,9 @@ class AccountAnalyticLine(models.Model):
                     raise ValidationError(
                         _(
                             "You cannot set a timesheet more than"
-                            " {days} days from current date.".format(
-                                days=record.project_id.timesheet_restriction_days
-                            ),
+                            " %(days)s days from current date."
                         )
+                        % {"days": days}
                     )
                 if (
                     record.project_id.timesheet_restriction_days
