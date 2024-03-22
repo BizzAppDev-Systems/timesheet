@@ -205,7 +205,6 @@ class HrTimesheetReportWizardField(models.AbstractModel):
         ondelete="cascade",
     )
     sequence = fields.Integer(
-        string="Sequence",
         required=True,
         default=10,
     )
