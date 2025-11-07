@@ -14,6 +14,10 @@ class TestHrTimesheetSheetWarning(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        group_timesheet_manager = cls.env.ref(
+            "hr_timesheet.group_hr_timesheet_approver"
+        )
+        group_hr_manager = cls.env.ref("hr.group_hr_user")
         cls.sheet_warning_definition_model = cls.env[
             "hr_timesheet.sheet.warning.definition"
         ]
@@ -36,6 +40,10 @@ class TestHrTimesheetSheetWarning(TransactionCase):
                     "email": "test@oca.com",
                     "company_id": cls.company.id,
                     "company_ids": [(4, cls.company.id)],
+                    "group_ids": [
+                        (4, group_timesheet_manager.id),
+                        (4, group_hr_manager.id),
+                    ],
                 }
             )
         )

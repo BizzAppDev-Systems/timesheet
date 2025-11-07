@@ -20,14 +20,10 @@ class SheetWarningItem(models.Model):
         related="sheet_id.company_id",
         store=True,
     )
-
-    _sql_constraints = [
-        (
-            "unique_warning",
-            "unique(sheet_id, warning_definition_id)",
-            "Timesheet warning has to be unique for timesheet sheet.",
-        )
-    ]
+    _unique_warning = models.Constraint(
+        "unique(sheet_id, warning_definition_id)",
+        "Timesheet warning has to be unique for timesheet sheet.",
+    )
 
     def _compute_name(self):
         for rec in self:
