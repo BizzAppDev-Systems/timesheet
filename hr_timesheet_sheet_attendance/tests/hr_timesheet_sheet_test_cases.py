@@ -9,12 +9,30 @@ class HrTimesheetTestCases(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user_id = cls._create_user()
+        cls.department = cls.env["hr.department"].create({"name": "Test Department"})
+        cls.job = cls.env["hr.job"].create({"name": "Developer"})
+        cls.category = cls.env["hr.employee.category"].create({"name": "Test Category"})
+        cls.work_location = cls.env["hr.work.location"].create(
+            {
+                "name": "Work Location 1",
+                "address_id": cls.env.ref("base.main_partner").id,
+            }
+        )
         cls.employee = cls._create_employee(cls.user_id)
         cls.timesheet = cls._create_timesheet_sheet(
             cls.employee, datetime.date(2018, 12, 12)
         )
-        cls.project_id = cls.env.ref("project.project_project_1")
-        cls.task_1 = cls.env.ref("project.project_1_task_9")
+        cls.project_id = cls.env["project.project"].create(
+            {
+                "name": "Test Project",
+            }
+        )
+        cls.task_1 = cls.env["project.task"].create(
+            {
+                "name": "Test Task",
+                "project_id": cls.project_id.id,
+            }
+        )
 
     @classmethod
     def _create_user(cls):
@@ -24,7 +42,7 @@ class HrTimesheetTestCases(TransactionCase):
             "login": "test",
             "password": "test",
             "company_id": cls.env.ref("base.main_company").id,
-            "groups_id": [
+            "group_ids": [
                 (
                     6,
                     0,
@@ -45,10 +63,10 @@ class HrTimesheetTestCases(TransactionCase):
         employee_vals = {
             "name": "TestEmployee",
             "user_id": cls.user_id.id,
-            "department_id": cls.env.ref("hr.dep_rd").id,
-            "job_id": cls.env.ref("hr.job_developer").id,
-            "category_ids": [(6, 0, [cls.env.ref("hr.employee_category_4").id])],
-            "work_location_id": cls.env.ref("hr.work_location_1").id,
+            "department_id": cls.department.id,
+            "job_id": cls.job.id,
+            "category_ids": [(6, 0, [cls.category.id])],
+            "work_location_id": cls.work_location.id,
             "work_email": "test@test.com",
             "work_phone": "+3281813700",
         }

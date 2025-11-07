@@ -9,7 +9,7 @@
 
 - 'Total Attendance' is total working time based on your attendance
 
-- 'Difference' is the difference betwwen total attandance time and
+- 'Difference' is the difference between total attendance time and
   working time (sum(attendace-time) - sum(unit amount in timessheet
   lines))
 

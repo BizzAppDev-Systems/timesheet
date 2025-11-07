@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -82,7 +82,7 @@ class HrTimesheetSheet(models.Model):
             if not ids_not_checkout:
                 continue
             raise UserError(
-                _(
+                self.env._(
                     "The timesheet cannot be validated as it does "
                     + "not contain an equal number of sign ins and sign outs."
                 )
