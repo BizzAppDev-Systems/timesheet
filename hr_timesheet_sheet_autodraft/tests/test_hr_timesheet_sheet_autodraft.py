@@ -1,6 +1,8 @@
 # Copyright 2020 Brainbean Apps (https://brainbeanapps.com)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+from odoo import Command
+
 from odoo.addons.base.tests.common import BaseCommon
 
 
@@ -89,6 +91,8 @@ class TestHrTimesheetSheetAutodraft(BaseCommon):
                 "name": "Time Entry 1",
             }
         )
+        timesheet_user_group = self.env.ref("hr_timesheet.group_hr_timesheet_user")
+        user.write({"group_ids": [Command.link(timesheet_user_group.id)]})
 
         aal_1.sheet_id.with_user(user).action_timesheet_confirm()
 
@@ -110,6 +114,9 @@ class TestHrTimesheetSheetAutodraft(BaseCommon):
                 "company_id": self.company_id.id,
             }
         )
+        timesheet_user_group = self.env.ref("hr_timesheet.group_hr_timesheet_user")
+        user.write({"group_ids": [Command.link(timesheet_user_group.id)]})
+
         employee = self.HrEmployee.create({"name": "Employee", "user_id": user.id})
         project = self.Project.create({"name": "Project"})
 
