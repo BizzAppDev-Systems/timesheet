@@ -1,7 +1,7 @@
 # Copyright 2022-2024 Tecnativa - Víctor Martínez
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _lt, api, fields, models
+from odoo import api, fields, models
 
 
 class ProjectProject(models.Model):
@@ -17,12 +17,12 @@ class ProjectProject(models.Model):
 
     @api.depends("budget_ids")
     def _compute_budget_amount(self):
-        data = self.env["project.project.budget"].read_group(
+        data = self.env["project.project.budget"].formatted_read_group(
             domain=[("project_id", "in", self.ids)],
-            fields=["project_id", "amount:sum"],
+            aggregates=["amount:sum"],
             groupby=["project_id"],
         )
-        mapped_data = {x["project_id"][0]: x["amount"] for x in data}
+        mapped_data = {x["project_id"][0]: x["amount:sum"] for x in data}
         for item in self:
             item.budget_amount = mapped_data.get(item.id, 0)
 
@@ -35,7 +35,7 @@ class ProjectProject(models.Model):
 
     def _get_profitability_labels(self):
         res = super()._get_profitability_labels()
-        res["budgets"] = _lt("Budgets")
+        res["budgets"] = self.env._("Budgets")
         return res
 
     def _get_profitability_items(self, with_action=True):
